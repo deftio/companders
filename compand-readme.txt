@@ -1,11 +1,11 @@
 /**
- *	@compand.txt - using compander.c / .h and related functions 
+ *  @compand.txt - using compander.c / .h and related functions 
  *		
- *	@copy Copyright (C) <2001-2012>  <M. A. Chatterjee>
+ *  @copy Copyright (C) <2001-2012>  <M. A. Chatterjee>
  *  @author M A Chatterjee <deftio [at] deftio [dot] com>
  *
- *	This document is a brief overview of the FR_mathroutines library with
- *  a small introductory disucssion about fixed radix math tradeoffs
+ *	This document is a brief overview of the simple compander library with
+ *  a small introductory disucssion about fixed radix math IIRs
  *
  *  @license: 
  *	This software is provided 'as-is', without any express or implied
@@ -99,7 +99,7 @@ In A-Law the following table (in bits) shows how a 13 bit signed linear integer 
  
  About the Fixed Radix (FR) Math IIR averages
  
-The (Infinite Impulse Reponse) IIR functions included here use fixed radix math to represent fractional parts of an integer.  By providing a settable radix (amount of bits devoted to fractional resolution), the programmer can make tradeoffs between resolution and dynamic range.  The larger the radix specified the more bits that will be used in the fractional portion of the representation, which for smaller window sizes may not by necessary.  There are more comprehensive ways to deal with fractional representation in binary systems (floating point, bigNum / arbitrary length registers, separation of numerator/denomators etc) but these incur much larger compute/code/memory overhead.  The simple system used here avoids the need for testing for overflow/underflow which allows for low foot print code/cpu/memory bandwidth at the 
+The (Infinite Impulse Reponse) IIR functions included here use fixed radix math to represent fractional parts of an integer.  By providing a settable radix (amount of bits devoted to fractional resolution), the programmer can make tradeoffs between resolution and dynamic range.  The larger the radix specified the more bits that will be used in the fractional portion of the representation, which for smaller window sizes may not by necessary.  There are more comprehensive ways to deal with fractional representation in binary systems (floating point, bigNum / arbitrary length registers, separation of numerator/denomators etc) but these incur much larger compute/code/memory overhead.  The simple system used here avoids the need for testing for overflow/underflow which allows for low foot print code/cpu/memory bandwidth.
  
  To calculate how many bits of fractional part while preventing overflow use the following formulas:
  
@@ -122,7 +122,63 @@ The function DIO_s32 DIO_IIRavgFR() allows any integer length window size to be 
 
 
   
+Embedded Systems
 
+Now back to an embedded microcontroller example.  It has a ADC which maps the voltage on 1 pin from 0-3.3V in to 0-4095 counts (12 bit).  We capacitively couple the input voltage and use the bias resistors to set mid point in the center of the range.  Lets say the the our resistors set the bias at 1.45V.  This equals our "zero point".  Below this point is negative from the incoming capacitively coupled audio and above this is positive.  
+
+Our "guess" as to the bias = both resistors are the same = (3.3V/2) =1.65V = (1.65V)/(4095 counts/3.3V)= 2048 counts
+
+Resistor actual set bias "zero point" = 1.45V = (1.5V) *(4095 counts/3.3V)) = 1861 counts 
+
+
+
+We want this to be "zero".
+
+To do this we start our ADC to periodically sample for sometime before we start "recording" audio.   We will feed the ADC values in to our IIR average to find the zero point. Note that even when we decide not to "record" we still run the IIR averager.
+
+//C-like psuedo code
+
+#include "companders.h"
+
+static volatile int32 gIIRavg= 2048; // global static var holds DC average
+static volatile int   gDoSomethingWithCompandedValue=0;
+void processAudioSample() //interrupt handler
+{
+	short adcValue;
+	char  aLawValue;
+	
+	//read the raw uncorrected sample
+	adcValue= inputPin.read_u16(); // read a 16 bit unsigned sample
+	
+	// this updates the IIR average everytime the adc returns a sample
+	gIIRavg = DIO_IIRavgPower2FR(gIIRavg,11,adcValue,8);
+	
+	//now compute companded value with DC offset correction
+	if (gDoSomethingWithCompandedValue)
+	{
+		aLawValue = LinearToALaw( DIO_LinearToALaw(adcValue-DIO_FR2I(gIIRavg)) );
+		doSomethingWithALaw(aLawValue);  // store it to a buffer, send it etc
+	}
+}
+
+main()
+{
+	gDoSomethingWithCompandedValue=0;
+	inputPin.attachInterrupt(&processAudioSample,8000); //attach interrupt handler, 8000 Hz sample rate
+	
+	// ... somepoint later in the code
+	
+	inputPin.start(); // start the averager
+	
+	// ... some time later
+	gDoSomethingWithCompandedValue=1; //now the interrupt routine will call the doSomethingWithALaw() function
+	
+	// ... some time later
+	gDoSomethingWithCompandedValue=0; //we're no longer collecting ALaw companded date, but we're 
+									  // still running the IIR averager
+	
+	
+}
  
  
  
