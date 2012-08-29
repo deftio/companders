@@ -156,7 +156,7 @@ void processAudioSample() //interrupt handler
 	//now compute companded value with DC offset correction
 	if (gDoSomethingWithCompandedValue)
 	{
-		aLawValue = LinearToALaw( DIO_LinearToALaw(adcValue-DIO_FR2I(gIIRavg)) );
+		aLawValue = DIO_LinearToALaw(adcValue-DIO_FR2I(gIIRavg));
 		doSomethingWithALaw(aLawValue);  // store it to a buffer, send it etc
 	}
 }
