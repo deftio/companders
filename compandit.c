@@ -47,8 +47,9 @@ int main (int argc, char *argv[])
 	printf("\n");
 	
 	//uncomment to 
-	/*
 	//show how linear-->alaw-->linear-->alaw progression / quantization error works
+	/*
+	
 	{
 		char alaw=0,alaw2;
 		short rev=0;
@@ -66,7 +67,7 @@ int main (int argc, char *argv[])
 
 
     // IIR averager examples
-    //window length of 8, using fractional precision of 4 bits
+    //IIR window length of 8 samples, using fractional precision of 4 bits
     {    
 		int a3=0, a4=0;
 		unsigned char rad=4; //4 bits fixed-radix fractional precision
@@ -80,7 +81,7 @@ int main (int argc, char *argv[])
 				DIO_FR2I(a3,rad),DIO_FR2D(a3,rad) ,DIO_FR2I(a4,rad),DIO_FR2D(a4,rad));
 		}
 	}
-    //window length of 64
+    //IIR window length of 64 samples
     {    
 		int a3=0, a4=0;
 		unsigned char rad=6; //rad is the number of bits of precision 
@@ -94,19 +95,19 @@ int main (int argc, char *argv[])
 				DIO_FR2I(a3,rad),DIO_FR2D(a3,rad) ,DIO_FR2I(a4,rad),DIO_FR2D(a4,rad));
 		}
 	}
-	*/
+	// */
 	//Typical microcontroller application.  See readme-companders.txt
 	// the input here simulates an A/D which has  a range 0..3.3V mapped as 12 bits (0..4095)
 	// with a DC bias of 1.55V  ==> (1.55/3.3)*4095 counts = 1923 counts
 	
 	//now window length of 256 is used for rejecting the resistor bias.  at 8KHz this window
-	// would be approx 8000/256 = 31.25 Hz (not quite but explaining Z xforms is beyond what
-	// can be explained in this simple space.
+	// would be approx 8000/256 ~= 31 Hz (not quite but explaining Z xforms is beyond what
+	// can be explained in this small space.)
 	//we seed the DC average at 3.3/2 = 1.65V (we guess its in the middle) and let the long window
 	//length hone in on the correct value.  (1.65V/3.3V) *4095 = 2048 counts
     {    
 		int actualDCbias     =1923;
-		int calculatedDCbias =2048;	//this is our estimate as outlined above
+		int calculatedDCbias =2048;	//2048 is our initial estimate as outlined above
 		unsigned char windowLenPow2InBits = 8; // 8 bit long window = 256 sample long window
 		unsigned char rad=6; //rad is the number of bits of precision 
 

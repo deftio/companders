@@ -1,11 +1,11 @@
 /**
- *  @compand.txt - using compander.c / .h and related functions 
+ *  @readme-companders.txt - using compander.c / .h and related functions 
  *		
  *  @copy Copyright (C) <2001-2012>  <M. A. Chatterjee>
  *  @author M A Chatterjee <deftio [at] deftio [dot] com>
  *
  *	This document is a brief overview of the simple compander library with
- *  a small introductory disucssion about fixed radix math IIRs
+ *  a small introductory disucssion about fixed radix math IIRs for microcontrollers
  *
  *  @license: 
  *	This software is provided 'as-is', without any express or implied
@@ -36,7 +36,7 @@ The accompanying companders.c contains a small set of functions written in C usi
 usage:
 #include "companders.h"
 no other dependancies are required.
-compile and link compand.c
+compile and link companders.c
 
 
 ***********************
@@ -62,7 +62,7 @@ so:
  
 A-Law and it cousin mu-Law are companders.  Rather than represent samples in linear steps the more bits are allocated to samples near zero while larger magnitude (positive or negative) samples are represented with proportionately larger interval sizes.
 
-Differential encoding (taking the difference of neighboring samples) can greatly help with compressing data to where we "have more bits" as well, provided samples rates are fast enough.  Telephony typically operated with 8 bit (companded) samples at 8KHz.
+Differential encoding (taking the difference of neighboring samples) can greatly help with compressing data to where we "have more bits" as well, provided samples rates are fast enough.  Telephony typically operated with 8 bit non-differential (companded) samples at 8KHz.
  
 In A-Law the following table (in bits) shows how a 13 bit signed linear integer is companded in to A-Law:
 (source is Sun microsystems, a similar table is on wikipedia or the G.711 specification).
