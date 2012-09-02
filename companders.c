@@ -35,8 +35,8 @@
 
 DIO_s8  DIO_LinearToALaw(DIO_s16 sample)
 { 
-     const int cClip = 32635;
-     const static char LogTable[128] = 
+     const DIO_s16 cClip = 32635;
+     const static DIO_s8 LogTable[128] = 
      { 
      1,1,2,2,3,3,3,3,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5, 
      6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6, 
@@ -44,8 +44,8 @@ DIO_s8  DIO_LinearToALaw(DIO_s16 sample)
      7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7 
      };
 
-     int sign, exponent, mantissa; 
-     char compandedValue; 
+     DIO_s32 sign, exponent, mantissa; 
+     DIO_s8 compandedValue; 
 	 sample = (sample ==-32768) ? -32767 : sample;
      sign = ((~sample) >> 8) & 0x80; 
      if (!sign) 
@@ -68,7 +68,7 @@ DIO_s8  DIO_LinearToALaw(DIO_s16 sample)
 
 DIO_s16 DIO_ALawToLinear(DIO_s8 aLawByte)
 {
-	 const static short ALawDecompTable[256]={
+	 const static DIO_s16 ALawDecompTable[256]={
 	  5504,  5248,  6016,  5760,  4480,  4224,  4992,  4736,
 	  7552,  7296,  8064,  7808,  6528,  6272,  7040,  6784,
 	  2752,  2624,  3008,  2880,  2240,  2112,  2496,  2368,
@@ -101,7 +101,7 @@ DIO_s16 DIO_ALawToLinear(DIO_s8 aLawByte)
 	 -1888, -1824, -2016, -1952, -1632, -1568, -1760, -1696,
 	  -688,  -656,  -752,  -720,  -560,  -528,  -624,  -592,
 	  -944,  -912, -1008,  -976,  -816,  -784,  -880,  -848};
-	 int addr = ((int)aLawByte)+128; // done for compilers with poor expr type enforcement
+	 DIO_s16 addr = ((DIO_s16)aLawByte)+128; // done for compilers with poor expr type enforcement
 	 return ALawDecompTable[addr]; 
 }
 
@@ -109,7 +109,7 @@ DIO_s16 DIO_ALawToLinear(DIO_s8 aLawByte)
 // fixed-radix IIR averager implementation supporting arbitrarily chosen windows
 DIO_s32 DIO_IIRavgFR	   (DIO_s32 prevAvg, DIO_u16 windowLen, DIO_s16 newSample, DIO_u8 radix)
 {
-	int iirAvg=0;
+	DIO_s32 iirAvg=0;
 	iirAvg = ((prevAvg * (windowLen-1)) + (DIO_I2FR(newSample,radix)))/windowLen;
 	return iirAvg;
 }
@@ -119,7 +119,7 @@ DIO_s32 DIO_IIRavgFR	   (DIO_s32 prevAvg, DIO_u16 windowLen, DIO_s16 newSample, 
 // and only shift operations for cpu efficiency
 DIO_s32 DIO_IIRavgPower2FR (DIO_s32 prevAvg, DIO_u8 windowLenInBits, DIO_s16 newSample, DIO_u8 radix)
 {
-	int iirAvg=0;
+	DIO_s32 iirAvg=0;
 	iirAvg = (((prevAvg<<windowLenInBits)-prevAvg) + (DIO_I2FR(newSample,radix)))>>windowLenInBits;
 	return iirAvg;
 }

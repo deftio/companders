@@ -46,8 +46,9 @@ int main (int argc, char *argv[])
 	printf("for more info see the accompanying compand.txt\n");
 	printf("\n");
 	
+	//uncomment to 
+	/*
 	//show how linear-->alaw-->linear-->alaw progression / quantization error works
-
 	{
 		char alaw=0,alaw2;
 		short rev=0;
@@ -68,13 +69,13 @@ int main (int argc, char *argv[])
     //window length of 8, using fractional precision of 4 bits
     {    
 		int a3=0, a4=0;
-		unsigned char rad=4;
+		unsigned char rad=4; //4 bits fixed-radix fractional precision
 		printf(" index   wave  IIRav(i)  IIRav(f)  IIRavP2(i) IIRavP2(f)\n");
 		for (i=0; i < 300; i++)
 		{
 			j=(i&0x3f)-20; // triangle wave with range -20 to + 43
-			a3= DIO_IIRavgFR(a3,8,j,rad);		  //4 bits fixed-radix fractional precision
-			a4= DIO_IIRavgPower2FR(a4,3,j,rad);  //4 bits fixed-radix fractional precision
+			a3= DIO_IIRavgFR(a3,8,j,rad);		  
+			a4= DIO_IIRavgPower2FR(a4,3,j,rad);  
 			printf("%6d  %6d  %6d  %9.4f     %6d  %9.4f \n",i,j, 
 				DIO_FR2I(a3,rad),DIO_FR2D(a3,rad) ,DIO_FR2I(a4,rad),DIO_FR2D(a4,rad));
 		}
@@ -82,18 +83,44 @@ int main (int argc, char *argv[])
     //window length of 64
     {    
 		int a3=0, a4=0;
-		unsigned char rad=6;
+		unsigned char rad=6; //rad is the number of bits of precision 
 		printf(" index   wave  IIRav(i)  IIRav(f)  IIRavP2(i) IIRavP2(f)\n");
 		for (i=0; i < 300; i++)
 		{
 			j=(i&0x3f)-20; // triangle wave with range -20 to + 43
-			a3= DIO_IIRavgFR(a3,64,j,rad);	   //5 bits fixed-radix fractional precision
-			a4= DIO_IIRavgPower2FR(a4,6,j,rad);  //5 bits fixed-radix fractional precision
+			a3= DIO_IIRavgFR(a3,64,j,rad);	   
+			a4= DIO_IIRavgPower2FR(a4,6,j,rad); 
 			printf("%6d  %6d  %6d  %9.4f     %6d  %9.4f \n",i,j, 
 				DIO_FR2I(a3,rad),DIO_FR2D(a3,rad) ,DIO_FR2I(a4,rad),DIO_FR2D(a4,rad));
 		}
 	}
-	//done...
+	*/
+	//Typical microcontroller application.  See readme-companders.txt
+	// the input here simulates an A/D which has  a range 0..3.3V mapped as 12 bits (0..4095)
+	// with a DC bias of 1.55V  ==> (1.55/3.3)*4095 counts = 1923 counts
+	
+	//now window length of 256 is used for rejecting the resistor bias.  at 8KHz this window
+	// would be approx 8000/256 = 31.25 Hz (not quite but explaining Z xforms is beyond what
+	// can be explained in this simple space.
+	//we seed the DC average at 3.3/2 = 1.65V (we guess its in the middle) and let the long window
+	//length hone in on the correct value.  (1.65V/3.3V) *4095 = 2048 counts
+    {    
+		int actualDCbias     =1923;
+		int calculatedDCbias =2048;	//this is our estimate as outlined above
+		unsigned char windowLenPow2InBits = 8; // 8 bit long window = 256 sample long window
+		unsigned char rad=6; //rad is the number of bits of precision 
+
+		calculatedDCbias = DIO_I2FR(calculatedDCbias,rad);
+		printf(" index   wave  actDCbias  calcDCbias  calcDCbias(f) alaw\n");
+		for (i=0; i < 1000; i++)  // if 8000 hz sample rate this represents the number of samples captured
+		{
+			j=(((i&0x3f)<<1)-63)+1923; // triangle wave w range 0..127  with a bias set at actualDCbias
+			calculatedDCbias = DIO_IIRavgPower2FR(calculatedDCbias,windowLenPow2InBits,j,rad); 
+			printf("%6d %6d   %6d     %6d      %9.4f     %3d\n",i,j,actualDCbias, 
+				DIO_FR2I(calculatedDCbias,rad),DIO_FR2D(calculatedDCbias,rad),
+				(int)(DIO_LinearToALaw(j-DIO_FR2I(calculatedDCbias,rad)) ));
+		}
+	}
 	printf("\n");
 	return ret_val;
 }
