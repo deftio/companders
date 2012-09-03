@@ -118,23 +118,22 @@ so the max radix that should be specified is:
   
 with 9 bits in the radix fractional precision of 512 units per integer (e.g 1/512) is possible.  The "2" in for formula comes from reserving bits for the sign bit and the additional operation in averager.
 
-The function DIO_s32 DIO_IIRavgFR() allows any integer length window size to be used, while th function DIO_IIRavgPower2FR() specifies window lengths in powers of two but all calculations are based on shift operations which can be significantly faster on lower end microprocessors.
+The function DIO_s32 DIO_IIRavgFR() allows any integer length window size to be used, while the function DIO_IIRavgPower2FR() specifies window lengths in powers of two but all calculations are based on shift operations which can be significantly faster on lower end microprocessors.
 
 
   
 Embedded Systems
 
-Now back to an embedded microcontroller example.  It has a ADC which maps the voltage on 1 pin from 0-3.3V in to 0-4095 counts (12 bit).  We capacitively couple the input voltage and use the bias resistors to set mid point in the center of the range.  Lets say the the our resistors set the bias at 1.45V.  This equals our "zero point".  Below this point is negative from the incoming capacitively coupled audio and above this is positive.  
+Now back to an embedded microcontroller example.  It has a ADC which maps the voltage on 1 pin from 0-3.3V in to 0-4095 counts (12 bit).  We capacitively couple the input voltage and use the bias resistors to set mid point in the center of the range.  Lets say the the our resistors set the bias at 1.55V.  This equals our "zero point".  Below this point is negative from the incoming capacitively coupled audio and above this is positive.  
 
 Our "guess" as to the bias = both resistors are the same = (3.3V/2) =1.65V = (1.65V)/(4095 counts/3.3V)= 2048 counts
 
-Resistor actual set bias "zero point" = 1.45V = (1.5V) *(4095 counts/3.3V)) = 1861 counts 
+Resistor actual set bias "zero point" = 1.55V = (1.55V) *(4095 counts/3.3V)) = 1923 counts 
+We want this to be "zero" we use for the companded A/D process.
+
+To do this we start our ADC to periodically sample for sometime before we start "recording" audio.   We will feed the ADC values in to our IIR average to find the actual zero point. Note that even when we decide not to "record" we still can still run the A/D and  IIR averager so its adapting to the real zero point.
 
 
-
-We want this to be "zero".
-
-To do this we start our ADC to periodically sample for sometime before we start "recording" audio.   We will feed the ADC values in to our IIR average to find the zero point. Note that even when we decide not to "record" we still run the IIR averager.
 
 //C-like psuedo code
 
@@ -180,6 +179,7 @@ main()
 	
 }
  
+Finally,  it can be in some systems that we can't turn off the audio input source it may be hard wired to some sensor or mic or perhaps the A/D center bias circuit (the 2 resistors) always is on when the audio is on.  In this case running the IIR with a long filter length all the time can remove the bias even when the audio is running.  For example in an 8KHz sampling system with an IIR length of 1024 is about 1/8 of a second or a cutoff freq well below 10Hz and costs almost nothing to run.
  
  
  
