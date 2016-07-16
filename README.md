@@ -1,7 +1,7 @@
-# Companders (a fixed point audio compression library) 
+# Companders (a fixed point audio compression library)  
 
-(c) 2001-2016  M. A. Chatterjee  < deftio [at] deftio [dot] com >
- 
+(c) 2001-2016  M. A. Chatterjee  < deftio [at] deftio [dot] com >  
+
 This document is a brief overview of the simple audio compression library for microcontrollers using A-Law (a type of compander).  This uses fixed-radix (integer only) math with
 a small introductory disucssion and use of associated DC-offset correction with an IIR fixed-radix filter.
 
@@ -48,9 +48,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## Versions
-1.0.1  3 Sep 2012  -- original release
-1.0.2 15 Jul 2016  -- updated README.md to markdown format.  updated license to be OSI compliant.  no code changes. some minor doc updates.
-				   -- shout out to John R Strohm giving me the nudge to update the docs here
+* 1.0.1  3 Sep 2012  -- original release  
+* 1.0.2 15 Jul 2016  -- updated README.md to markdown format.  updated license to be OSI compliant.  no code changes. some minor doc updates. Thanks to John R Strohm giving me the nudge to update the docs here.  
+
 
 ## About companding...
 
@@ -92,7 +92,7 @@ In A-Law the following table (in bits) shows how a 13 bit signed linear integer 
 |   1wxyzabcdefg			| 111wxyz         |
  
  
- ## About this library:
+## About this library:
  
  This free library supports A-Law and IIR averages.  A-Law is used for the companding while the IIR averagers can be used for for embedded ADCs where the zero point is set loosely.  Since the companders are sensitive, and allocate more bits, to values near zero its important to define a good zero.  For example a microcontroller has a pin with an ADC which is fed digitized audio signal.  The smallest value for the microtroncoller is 0V = 0x00 and the 3.3V = 0x3ff for 10 effective bits of resolution.  A resisitive analog divider is used to center the ADC near the half-input range or about 1.6V while the audio is capacitively coupled as shown here:  
 
@@ -198,6 +198,7 @@ main()
 }
  
 ```
+The accompanying compandit.c file is an example program demonstrating the convergence of the averager to a simulated DC offset value (output is in the testout.txt file)
 
 ### Some Closing comments..
 Finally,  it can be in some systems that we can't turn off the audio input source it may be hard wired to some sensor or mic or perhaps the A/D center bias circuit (the 2 resistors) always is on when the audio is on.  In this case running the IIR with a long filter length all the time can remove the bias even when the audio is running.  For example in an 8KHz sampling system with an IIR length of 1024 is about 1/8 of a second or a cutoff freq well below 10Hz and costs almost nothing to run.
