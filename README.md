@@ -198,7 +198,7 @@ main()
 }
  
 ```
-The accompanying compandit.c file is an example program demonstrating the convergence of the averager to a simulated DC offset value (output is in the testout.txt file)
+The accompanying compandit.c file is an example program demonstrating the convergence of the averager to a simulated DC offset value (output is in the testout.txt file).
 
 ### Some Closing comments..
 Finally,  it can be in some systems that we can't turn off the audio input source it may be hard wired to some sensor or mic or perhaps the A/D center bias circuit (the 2 resistors) always is on when the audio is on.  In this case running the IIR with a long filter length all the time can remove the bias even when the audio is running.  For example in an 8KHz sampling system with an IIR length of 1024 is about 1/8 of a second or a cutoff freq well below 10Hz and costs almost nothing to run.
