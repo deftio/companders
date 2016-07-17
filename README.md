@@ -113,7 +113,7 @@ uC_ADC_Pin<-----------C---- audio_input_source
  
  If it not easily possible to turn off the analog / audio source then the long term DC average can be inferred by using one of the IIR functions included here with a long window length (perhaps 2000 samples if sampling at 8 KHz or about 1/4 second).  These IIR functions are cheap to run in realtime even with reasonably high sample rates as they take little memory and are simple integer-math IIRs.
  
- ## About the Fixed Radix (FR) Math IIR averages
+## About the Fixed Radix (FR) Math IIR averages
  
 The (Infinite Impulse Reponse) IIR functions included here use fixed radix math to represent fractional parts of an integer.  By providing a settable radix (amount of bits devoted to fractional resolution), the programmer can make tradeoffs between resolution and dynamic range.  The larger the radix specified the more bits that will be used in the fractional portion of the representation, which for smaller window sizes may not by necessary.  There are more comprehensive ways to deal with fractional representation in binary systems (floating point, bigNum / arbitrary length registers, separation of numerator/denomators etc) but these incur much larger compute/code/memory overhead.  The simple system used here avoids the need for testing for overflow/underflow which allows for low foot print code/cpu/memory bandwidth.
  
