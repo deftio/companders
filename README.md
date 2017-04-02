@@ -1,6 +1,8 @@
+[![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
+
 # Companders (a fixed point audio compression library)  
 
-(c) 2001-2016  M. A. Chatterjee  < deftio [at] deftio [dot] com >  
+(c) 2001-2017  M. A. Chatterjee  < deftio [at] deftio [dot] com >  
 
 This document is a brief overview of the simple audio compression library for microcontrollers using A-Law (a type of compander).  This uses fixed-radix (integer only) math with
 a small introductory disucssion and use of associated DC-offset correction with an IIR fixed-radix filter.
