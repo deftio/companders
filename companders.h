@@ -45,6 +45,8 @@ extern "C"
 {
 #endif
 
+#define DIO_COMPANDERS_VER  (0x000010003)  //00 01 00 03 in hex
+
 //"DIO" prefixes are to assist in prevent name collisions if global namespace is used.
 
 //typedefs ... change for platform dependant register size

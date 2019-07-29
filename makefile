@@ -14,5 +14,5 @@ compandit: $(OBJ)
 	gcc -o $@ $^ $(CFLAGS) -lm
 
 clean :
-	rm  *.o
+	rm  *.o -f
 
