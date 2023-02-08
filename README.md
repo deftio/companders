@@ -1,11 +1,14 @@
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-blue.svg)](https://opensource.org/licenses/BSD-2-Clause)
 
-# Companders (a fixed point audio compression library)  
+# [Companders (a fixed point audio compression library)](https://deftio.github.io/companders/)  
 
-(c) 2001-2019  M. A. Chatterjee 
+(c) 2001-2023  M. A. Chatterjee 
 
-This document is a brief overview of this simple audio compression library for microcontrollers using A-Law (a type of compander).  This uses fixed-radix (integer only) math with
-a small introductory disucssion and use of associated DC-offset correction with an IIR fixed-radix filter.
+This document is a brief overview of this simple audio compression library for microcontrollers using A-Law (a type of compander).  This uses fixed-radix (integer only) math with a small introductory disucssion and use of associated DC-offset correction with an IIR fixed-radix filter.
+
+The code in this repo is suitable for small microcontrollers such as 8 bit and 16 bit families (arduino, 68hc, 8051 ) as well as on 32 bit familes such as ARM, RISC-V, etc.
+
+As this is a fixed point library (a type of integer math), floating point is not used or even emulated.  For more background on using fixed point (or fixed radix) math see this code library and documentation : [FR_Math](https://github.com/deftio/fr_math) 
 
 ## Welcome..
 
@@ -186,9 +189,11 @@ Finally,  it can be in some systems that we can't turn off the audio input sourc
  
 ## Versions
 
-* 1.0.1  3 Sep 2012  -- original release  
-* 1.0.2 15 Jul 2016  -- updated README.md to markdown format.  updated license to be OSI compliant.  no code changes. some minor doc updates. Thanks to John R Strohm giving me the nudge to update the docs here.  
+* 1.0.4 23 Jan 2023  -- updated docs 
 * 1.0.3 28 Jul 2019  -- updated docs, ver example
+* 1.0.2 15 Jul 2016  -- updated README.md to markdown format.  updated license to be OSI compliant.  no code changes. some minor doc updates. Thanks to John R Strohm giving me the nudge to update the docs here. 
+* 1.0.1  3 Sep 2012  -- original release in github  
+
 
  
 ## License

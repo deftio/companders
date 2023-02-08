@@ -1,7 +1,7 @@
 /**
  *	@companders.h - header definition file for embedded companding routines
  *		
- *	@copy Copyright (C) <2001-2012>  <M. A. Chatterjee>
+ *	@copy Copyright (C) <2001-2023>  <M. A. Chatterjee>
  *  @author M A Chatterjee <deftio [at] deftio [dot] com>
  *	@version 1.02 M. A. Chatterjee, cleaned up naming, license 
  *
@@ -10,7 +10,7 @@
  *
 LICENSE: 
 
-Copyright (c) 2001-2016, M. A. Chatterjee < deftio at deftio dot com >
+Copyright (c) 2001-2023, M. A. Chatterjee < deftio at deftio dot com >
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -45,7 +45,7 @@ extern "C"
 {
 #endif
 
-#define DIO_COMPANDERS_VER  (0x000010003)  //00 01 00 03 in hex
+#define DIO_COMPANDERS_VER  (0x000010004)  //00 01 00 04 in hex
 
 //"DIO" prefixes are to assist in prevent name collisions if global namespace is used.
 
