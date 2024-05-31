@@ -46,7 +46,7 @@ so:
  127 * 256 =  32512 
  ```
 
- Notice that the steps between these linearly rounded off samples are quite large.  This truncated 8 bit representation would be very good at representing a linear quantity system such as linear displacement transducer which moves through its whole range as part of normal operation (like a door). but terrible at logarithmic phenomonen such as audio.  Audio information tends to be grouped around zero with occaisonaly peaks of loudness.  So with linear quantization soft audio would be lost due to the large quanitization steps at low volumes. To address this companders were developed for use in landline telephony for compressing audio data logarithmically instead of linearly.  Hence we use more bits for audio samples near zero and less with audio samples near the integer max extremes.
+Notice that the steps between these linearly rounded off samples are quite large.  This truncated 8 bit representation would be very good at representing a linear quantity system such as linear displacement transducer which moves through its whole range as part of normal operation (like a door). but terrible at logarithmic phenomonen such as audio.  Audio information tends to be grouped around zero with occaisonaly peaks of loudness.  So with linear quantization soft audio would be lost due to the large quanitization steps at low volumes. To address this companders were developed for use in landline telephony for compressing audio data logarithmically instead of linearly.  Hence we use more bits for audio samples near zero and less with audio samples near the integer max extremes.
 
 A-Law and it cousin mu-Law are companders.  Rather than represent samples in linear steps the more bits are allocated to samples near zero while larger magnitude (positive or negative) samples are represented with proportionately larger interval sizes.
 
@@ -66,15 +66,15 @@ In A-Law the following table (in bits) shows how a 13 bit signed linear integer 
 |   01wxyzabcdef   | 110wxyz         |
 |   1wxyzabcdefg   | 111wxyz         |
 
-### u-law (also mu-law)
+### Mu-law (also mu-law or u-law)
 
-Mu is similar compander to A-Law but was used in American & Japanese telephony instead of European Telephony. 
+Mu is similar compander to A-Law but  used in American & Japanese telephony instead of European Telephony. 
 
- A-Law is mainly used in European digital communications, while μ-Law is employed in North American and Japanese systems. Both algorithms aim to optimize the dynamic range of an audio signal by using logarithmic compression, but they differ in their compression characteristics and implementation. A-Law provides a slightly lower compression ratio, which offers better signal quality for signals with lower amplitude, whereas μ-Law provides higher compression, which can handle a wider range of input levels more efficiently but introduces more distortion for low-level signals. These standards were developed in the mid-20th century to improve the efficiency and quality of voice transmission over limited-bandwidth communication channels. A-Law was standardized by the International Telegraph and Telephone Consultative Committee (CCITT) and is detailed in the ITU-T G.711 recommendation, while μ-Law was standardized by the American National Standards Institute (ANSI).
+Both algorithms aim to optimize the dynamic range of an audio signal by using logarithmic compression, but they differ in their compression characteristics and implementation. A-Law provides a slightly lower compression ratio, which offers better signal quality for signals with lower amplitude, whereas μ-Law provides higher compression, which can handle a wider range of input levels more efficiently but introduces more distortion for low-level signals. These standards were developed in the mid-20th century to improve the efficiency and quality of voice transmission over limited-bandwidth communication channels. A-Law was standardized by the International Telegraph and Telephone Consultative Committee (CCITT) and is detailed in the ITU-T G.711 recommendation, while μ-Law was standardized by the American National Standards Institute (ANSI).
 
-## About this library:
+## About this library
 
- This free library supports A-Law and IIR averages.  A-Law is used for the companding while the IIR averagers can be used for for embedded ADCs where the zero point is set loosely.  Since the companders are sensitive, and allocate more bits, to values near zero its important to define a good zero.  For example a microcontroller has a pin with an ADC which is fed digitized audio signal.  The smallest value for the microtroncoller is 0V = 0x00 and the 3.3V = 0x3ff for 10 effective bits of resolution.  A resisitive analog divider is used to center the ADC near the half-input range or about 1.6V while the audio is capacitively coupled as shown here:  
+This free library supports A-Law, mu-Law and IIR averages.  A-Law or Mu-Law are used for the companding while the IIR averagers can be used for for embedded ADCs where the zero point is set loosely.  Since the companders are sensitive, and allocate more bits, to values near zero its important to define a good zero.  For example a microcontroller has a pin with an ADC which is fed digitized audio signal.  The smallest value for the microtroncoller is 0V = 0x00 and the 3.3V = 0x3ff for 10 effective bits of resolution.  A resisitive analog divider is used to center the ADC near the half-input range or about 1.6V while the audio is capacitively coupled as shown here:  
 
  ```text
  
