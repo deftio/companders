@@ -4,7 +4,7 @@
 
 (c) 2001-2024  M. A. Chatterjee
 
-This document is a brief overview of this simple audio compression library for microcontrollers using A-Law (a type of compander).  This uses fixed-radix (integer only) math with a small introductory disucssion and use of associated DC-offset correction with an IIR fixed-radix filter.
+This document is a brief overview of this simple audio compression library for microcontrollers using A-Law and Mu-Law (a type of compander).  This uses fixed-radix (integer only) math with a small introductory disucssion and use of associated DC-offset correction with an IIR fixed-radix filter.
 
 The code in this repo is suitable for small microcontrollers such as 8 bit and 16 bit families (arduino, 68hc, 8051 ) as well as on 32 bit familes such as ARM, RISC-V, etc.
 
