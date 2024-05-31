@@ -10,7 +10,7 @@
  *
 LICENSE: 
 
-Copyright (c) 2001-2023, M. A. Chatterjee < deftio at deftio dot com >
+Copyright (c) 2001-2024, M. A. Chatterjee < deftio at deftio dot com >
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -45,7 +45,7 @@ extern "C"
 {
 #endif
 
-#define DIO_COMPANDERS_VER  (0x000010004)  //00 01 00 04 in hex
+#define DIO_COMPANDERS_VER  (0x000010005)  //00 01 00 05 in hex
 
 //"DIO" prefixes are to assist in prevent name collisions if global namespace is used.
 
@@ -74,8 +74,14 @@ DIO_s8  DIO_LinearToALaw(DIO_s16 sample);
 
 //convert 8bit Alaw companded representation back to linear 16 bit
 DIO_s16 DIO_ALawToLinear(DIO_s8 aLawByte);
-			
-			
+
+//convert signed linear 16 bit sample to an 8 bit u-Law companded sample			
+DIO_s8  DIO_LinearToULaw(DIO_s16 sample);
+
+//convert signed linear 16 bit sample to an 8 bit u-Law companded sample
+DIO_s16 DIO_ULawToLinear(DIO_s8 uLawByte);
+
+
 //DC Offset correction for integer companders
 //IIR: y_0=(y_1*(w-1)+x_0)/(w)
 //where w is the window length

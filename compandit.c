@@ -7,7 +7,7 @@
  *
 LICENSE: 
 
-Copyright (c) 2001-2016, M. A. Chatterjee < deftio at deftio dot com >
+Copyright (c) 2001-2024, M. A. Chatterjee < deftio at deftio dot com >
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
