@@ -9,11 +9,11 @@
 	[x] IIR fixed point filter for DC offset (power of 2)
 			-- allows no divides  
 	[x] example program
+	[x] full test suite
+	[x] u-law encode
+	[x] u-law decode
 
 
 ## TODO
 	[ ] build-test (travis /circle etc)
-	[ ] full test suite
-	[ ] u-law encode
-	[ ] u-law decode
 
