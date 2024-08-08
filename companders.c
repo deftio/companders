@@ -1,14 +1,14 @@
 /**
  *	@companders.c - implementation
  *
- *	@copy copyright (c) <2001-2016>  <M. A. Chatterjee>
+ *	@copy copyright (c) <2001-2024>  <M. A. Chatterjee>
  *  @author M A Chatterjee <deftio [at] deftio [dot] com>
- *	@version 1.02 M. A. Chatterjee, cleaned up naming, license
+ *	@version 1.05 M. A. Chatterjee, cleaned up naming, license
  *
 
 LICENSE:
 
-Copyright (c) 2001-2016, M. A. Chatterjee < deftio at deftio dot com >
+Copyright (c) 2001-2024, M. A. Chatterjee < deftio at deftio dot com >
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

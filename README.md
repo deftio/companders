@@ -1,4 +1,5 @@
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-blue.svg)](https://opensource.org/licenses/BSD-2-Clause)
+[![Github Actions Ci](https://github.com/deftio/companders/actions/workflows/ci.yml/badge.svg)](https://github.com/deftio/companders/actions/workflows/ci.yml/badge.svg)
 
 # [Companders (a fixed point audio compression library)](https://deftio.github.io/companders/)  
 
