@@ -3,7 +3,7 @@
  *
  *	@copy copyright (c) <2001-2024>  <M. A. Chatterjee>
  *  @author M A Chatterjee <deftio [at] deftio [dot] com>
- *	@version 1.05 M. A. Chatterjee, cleaned up naming, license
+ *	@version 1.0.6 M. A. Chatterjee, cleaned up naming, license
  *
 
 LICENSE:

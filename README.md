@@ -5,9 +5,9 @@
 
 (c) 2001-2024  M. A. Chatterjee
 
-This document is a brief overview of this simple audio compression library for microcontrollers using A-Law and Mu-Law (a type of compander).  This uses fixed-radix (integer only) math with a small introductory disucssion and use of associated DC-offset correction with an IIR fixed-radix filter.
+This repo is a simple audio compression library for microcontrollers using A-Law and Mu-Law (a type of compander).  The code uses fixed-radix (integer only) math with a small introductory discussion and use of associated DC-offset correction with an IIR fixed-radix filter.
 
-The code in this repo is suitable for small microcontrollers such as 8 bit and 16 bit families (arduino, 68hc, 8051 ) as well as on 32 bit familes such as ARM, RISC-V, etc.
+All the code in this repo is suitable for small microcontrollers such as 8 bit and 16 bit families (arduino, 68hc, 8051 ) as well as on 32 bit familes such as ARM, RISC-V, etc.
 
 As this is a fixed point library (a type of integer math), floating point is not used or even emulated.  For more background on using fixed point (or fixed radix) math see this code library and documentation : [FR_Math](https://github.com/deftio/fr_math)
 
@@ -185,8 +185,16 @@ The accompanying compandit.c file is an example program demonstrating the conver
 
 Finally,  it can be in some systems that we can't turn off the audio input source it may be hard wired to some sensor or mic or perhaps the A/D center bias circuit (the 2 resistors) always is on when the audio is on.  In this case running the IIR with a long filter length all the time can remove the bias even when the audio is running.  For example in an 8KHz sampling system with an IIR length of 1024 is about 1/8 of a second or a cutoff freq well below 10Hz and costs almost nothing to run.
 
+### Further Reading
+
+* [TI App Note on Alaw and Mulaw](https://www.ti.com/lit/an/spra163a/spra163a.pdf)
+* [wikipedia on Companding](https://en.wikipedia.org/wiki/Companding)
+* [University of British Columbia lab on Companding](https://people.ece.ubc.ca/edc/4550.jan2018/lab2.pdf)
+
 ## Versions
 
+* 1.0.6 08 Aug 2024  -- added ci testing
+* 1.0.5 30 May 2024  -- cleaned up release
 * 1.0.4 30 May 2024  -- add ulaw, updated docs, added full test
 * 1.0.4 23 Jan 2023  -- updated docs
 * 1.0.3 28 Jul 2019  -- updated docs, ver example
