@@ -45,7 +45,7 @@ extern "C"
 {
 #endif
 
-#define DIO_COMPANDERS_VER  (0x000010005)  //00 01 00 05 in hex
+#define DIO_COMPANDERS_VER  (0x000010006)  //00 01 00 05 in hex
 
 //"DIO" prefixes are to assist in prevent name collisions if global namespace is used.
 

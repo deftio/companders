@@ -38,6 +38,48 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <assert.h>
 #include "companders.h"
 
+//=========================================================
+const int cBias = 0x84;
+const int cClip = 32635;
+
+static char MuLawCompressTable[256] =
+{
+     0,0,1,1,2,2,2,2,3,3,3,3,3,3,3,3,
+     4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+     5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
+     5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
+     6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
+     6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
+     6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
+     6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
+     7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
+     7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
+     7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
+     7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
+     7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
+     7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
+     7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
+     7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7
+};
+
+unsigned char LinearToMuLawSample(short sample)
+{
+     int sign = (sample >> 8) & 0x80;
+     if (sign)
+          sample = (short)-sample;
+     if (sample > cClip)
+          sample = cClip;
+     sample = (short)(sample + cBias);
+     int exponent = (int)MuLawCompressTable[(sample>>7) & 0xFF];
+     int mantissa = (sample >> (exponent+3)) & 0x0F;
+     int compressedByte = ~ (sign | (exponent << 4) | mantissa);
+
+     return (unsigned char)compressedByte;
+}
+
+
+
+//=========================================================
 
 void test_LinearToALaw() {
     DIO_s16 testSamples[] = {-2460, -338, -1, 499, 980};
@@ -63,23 +105,24 @@ void test_ALawToLinear() {
 
 void test_LinearToULaw() {
     DIO_s16 testSamples[]     = {-2460, -338,   -1,  499, 7000};
-    DIO_s8  expectedResults[] = { 0x01c, 0x048, 0x07e, 0x0bf, 0x084};
+    DIO_s8  expectedResults[] = { 59, 98, 127, 220, 164};
     size_t numSamples = sizeof(testSamples) / sizeof(testSamples[0]);
     for (size_t i = 0; i < numSamples; ++i) {
         DIO_s8 companded = DIO_LinearToULaw(testSamples[i]);
-        printf("Linear to u-Law: %5d -> %5d (expected: %5d)\n", testSamples[i], companded), (int)expectedResults[i];
-       // assert(companded == expectedResults[i]);
+        DIO_s8 compandedTest = LinearToMuLawSample(testSamples[i]);
+        printf("Linear to u-Law: %5d -> %5d (expected: %5d %5d)\n", testSamples[i], companded, compandedTest, expectedResults[i]);
+        assert(companded == expectedResults[i]);
     }
 }
 
 void test_ULawToLinear() {
-    DIO_s8 testSamples[]      = { 0x1c, 0x61, 0x7e, 0xbf, 0x84};
-    DIO_s16 expectedResults[] = {-2463,  -89,   -2,  495, 7007};
+    DIO_s8 testSamples[]      = { 0x1c, 0x61, 0, 0xbf, 0x84};
+    DIO_s16 expectedResults[] = {-9852,  -356,   -32124,  1980, 28028};
     size_t numSamples = sizeof(testSamples) / sizeof(testSamples[0]);
     for (size_t i = 0; i < numSamples; ++i) {
         DIO_s16 linear = DIO_ULawToLinear(testSamples[i]);
-        printf("u-Law to Linear: %5d -> %5d (expected: %5d)\n", testSamples[i], linear, expectedResults[i]);
-       // assert(linear == expectedResults[i]);
+        printf("u-Law to Linear: %5d -> %5d (expected: %5d)\n", testSamples[i],  linear, expectedResults[i]);
+        assert(linear == expectedResults[i]);
     }
 }
 
