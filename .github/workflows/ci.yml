@@ -33,7 +33,7 @@ jobs:
    
     - name: Filter out system and test code
       run: |
-        lcov --remove coverage.info 'tests/*' '/usr/*' 'test-library*' --output-file coverage.info
+        lcov --remove coverage.info 'tests/*' '/usr/*' 'companders_fulltest*' --output-file coverage.info
 
     - name: List coverage info
       run: |
