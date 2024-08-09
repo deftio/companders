@@ -9,13 +9,14 @@ OBJ = companders.o compandit.o
 TEST_OBJ = companders.o companders_fulltest.o
 
 %.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -c -o $@ $< $(CFLAGS_TEST)
 
 compandit: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) -lm
 
 companders_fulltest: $(TEST_OBJ)
-	$(CC) -o $@ $^ $(CFLAGS_TEST) -lm
+	$(CC) -o $@ $^ $(CFLAGS_TEST) -lm 
+
 
 test: companders_fulltest
 	./companders_fulltest

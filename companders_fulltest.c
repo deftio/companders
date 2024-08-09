@@ -163,5 +163,6 @@ int main() {
     test_IIRavgFR();
     printf("\nTesting IIRavgPower2FR...\n");
     test_IIRavgPower2FR();
+    printf("\n\nAll tests passed!\n\n");
     return 0;
 }
