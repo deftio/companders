@@ -192,6 +192,7 @@ Finally,  it can be in some systems that we can't turn off the audio input sourc
 * [University of British Columbia lab on Companding](https://people.ece.ubc.ca/edc/4550.jan2018/lab2.pdf)
 
 ### Code Coverage
+
 Code coverage is achieved using gcov from the gcc test suite. To see the code coverage:
 
 ```bash
@@ -199,8 +200,9 @@ make clean
 make
 ./test-library.out
 gcov companders.c
-This generates the file lib.c.gcov, which can be viewed in any text editor. Lines with #### have never been run.
 ```
+
+The line gcov companders.c generates the file companders.c.gcov, which can be viewed in any text editor. Lines marked with #### have never been run.
 
 
 ## Versions
