@@ -82,8 +82,8 @@ unsigned char LinearToMuLawSample(short sample)
 //=========================================================
 
 void test_LinearToALaw() {
-    DIO_s16 testSamples[] = {-2460, -338, -1, 499, 980};
-    DIO_s8 expectedResults[] = {22, 64, 85, -54, -5};
+    DIO_s16 testSamples[] = {-2460, -338, -1, 499, 980, 32700};
+    DIO_s8 expectedResults[] = {22, 64, 85, -54, -5, -86};
     size_t numSamples = sizeof(testSamples) / sizeof(testSamples[0]);
     for (size_t i = 0; i < numSamples; ++i) {
         DIO_s8 companded = DIO_LinearToALaw(testSamples[i]);
@@ -104,8 +104,8 @@ void test_ALawToLinear() {
 }
 
 void test_LinearToULaw() {
-    DIO_s16 testSamples[]     = {-2460, -338,   -1,  499, 7000};
-    DIO_s8  expectedResults[] = { 59, 98, 127, 220, 164};
+    DIO_s16 testSamples[]     = {-2460, -338,   -1,  499, 7000,32700};
+    DIO_s8  expectedResults[] = { 59, 98, 127, 220, 164, -128};
     size_t numSamples = sizeof(testSamples) / sizeof(testSamples[0]);
     for (size_t i = 0; i < numSamples; ++i) {
         DIO_s8 companded = DIO_LinearToULaw(testSamples[i]);

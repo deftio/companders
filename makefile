@@ -12,7 +12,7 @@ TEST_OBJ = companders.o companders_fulltest.o
 	$(CC) -c -o $@ $< $(CFLAGS_TEST)
 
 compandit: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS) -lm
+	$(CC) -o $@ $^ $(CFLAGS_TEST) -lm
 
 companders_fulltest: $(TEST_OBJ)
 	$(CC) -o $@ $^ $(CFLAGS_TEST) -lm 
@@ -22,4 +22,4 @@ test: companders_fulltest
 	./companders_fulltest
 
 clean:
-	rm *.o compandit companders_fulltest -f
+	rm  *.o  *.asm  *.lst *.sym *.rel *.s *.gc* -f *.info

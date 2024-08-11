@@ -130,11 +130,12 @@ static DIO_s8 MuLawLogTable[256] =
      7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
      7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7
 };
-#define cBias 0x84
-#define cClip 32635
+
 
 DIO_s8 DIO_LinearToULaw(DIO_s16 sample)
 {
+	const DIO_s16 cBias=0x84;
+	const DIO_s16 cClip=32635;
 	DIO_s32 sign, exponent, mantissa;
 	DIO_s8 compandedValue;
 

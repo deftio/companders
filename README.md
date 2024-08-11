@@ -191,19 +191,31 @@ Finally,  it can be in some systems that we can't turn off the audio input sourc
 * [wikipedia on Companding](https://en.wikipedia.org/wiki/Companding)
 * [University of British Columbia lab on Companding](https://people.ece.ubc.ca/edc/4550.jan2018/lab2.pdf)
 
+### Code Coverage
+Code coverage is achieved using gcov from the gcc test suite. To see the code coverage:
+
+```bash
+make clean
+make
+./test-library.out
+gcov companders.c
+This generates the file lib.c.gcov, which can be viewed in any text editor. Lines with #### have never been run.
+```
+
+
 ## Versions
 
-* 1.0.6 08 Aug 2024  -- added ci testing
-* 1.0.5 30 May 2024  -- cleaned up release
-* 1.0.4 30 May 2024  -- add ulaw, updated docs, added full test
-* 1.0.4 23 Jan 2023  -- updated docs
-* 1.0.3 28 Jul 2019  -- updated docs, ver example
-* 1.0.2 15 Jul 2016  -- updated README.md to markdown format.  updated license to be OSI compliant.  no code changes. some minor doc updates. Thanks to John R Strohm giving me the nudge to update the docs here.
-* 1.0.1  3 Sep 2012  -- original release in github  
+* 1.0.6 08 Aug 2024  -- added ci testing 
+* 1.0.5 30 May 2024  -- cleaned up release 
+* 1.0.4 30 May 2024  -- add ulaw, updated docs, added full test 
+* 1.0.4 23 Jan 2023  -- updated docs  
+* 1.0.3 28 Jul 2019  -- updated docs, ver example 
+* 1.0.2 15 Jul 2016  -- updated README.md to markdown format.  updated license to be OSI compliant.  no code changes. some minor doc updates. Thanks to John R Strohm giving me the nudge to update the docs here. 
+* 1.0.1  3 Sep 2012  -- original release in github   
 
 ## License
 
-See attached LICENSE.txt file  (OSI approved BSD 2.0)
+See attached LICENSE.txt file  (OSI approved BSD 2 Clause)
 
 Copyright (c) 2001-2024, M. A. Chatterjee < deftio at deftio dot com >
 All rights reserved.
@@ -228,3 +240,5 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
