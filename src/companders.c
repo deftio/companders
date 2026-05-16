@@ -1,14 +1,14 @@
 /**
  *	@companders.c - implementation
  *
- *	@copy copyright (c) <2001-2024>  <M. A. Chatterjee>
+ *	@copy copyright (c) <2001-2026>  <M. A. Chatterjee>
  *  @author M A Chatterjee <deftio [at] deftio [dot] com>
- *	@version 1.0.6 M. A. Chatterjee, cleaned up naming, license
+ *	@version 1.0.7 M. A. Chatterjee, cleaned up naming, license
  *
 
 LICENSE:
 
-Copyright (c) 2001-2024, M. A. Chatterjee < deftio at deftio dot com >
+Copyright (c) 2001-2026, M. A. Chatterjee < deftio at deftio dot com >
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "companders.h"
 
-const static DIO_s8 LogTable[128] =
+static const DIO_s8 LogTable[128] =
 {
 	1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
 	6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
@@ -62,19 +62,19 @@ DIO_s8 DIO_LinearToALaw(DIO_s16 sample)
 	{
 		exponent = (int)LogTable[(sample >> 8) & 0x7F];
 		mantissa = (sample >> (exponent + 3)) & 0x0F;
-		compandedValue = ((exponent << 4) | mantissa);
+		compandedValue = (DIO_s8)((exponent << 4) | mantissa);
 	}
 	else
 	{
-		compandedValue = (unsigned char)(sample >> 4);
+		compandedValue = (DIO_s8)(sample >> 4);
 	}
-	compandedValue ^= (sign ^ 0x55);
+	compandedValue ^= (DIO_s8)(sign ^ 0x55);
 	return compandedValue;
 }
 
 DIO_s16 DIO_ALawToLinear(DIO_s8 aLawByte)
 {
-	const static DIO_s16 ALawDecompTable[256] = {
+	static const DIO_s16 ALawDecompTable[256] = {
 		5504, 5248, 6016, 5760, 4480, 4224, 4992, 4736,
 		7552, 7296, 8064, 7808, 6528, 6272, 7040, 6784,
 		2752, 2624, 3008, 2880, 2240, 2112, 2496, 2368,
@@ -142,7 +142,7 @@ DIO_s8 DIO_LinearToULaw(DIO_s16 sample)
 	// Get the sign and the magnitude of the sample
 	sign = (sample >> 8) & 0x80;
 	if (sign != 0)
-		sample = -sample;
+		sample = (DIO_s16)(-sample);
 	if (sample > cClip)
 		sample = cClip;
 	sample += cBias;
@@ -150,9 +150,9 @@ DIO_s8 DIO_LinearToULaw(DIO_s16 sample)
 	
 	exponent = MuLawLogTable[(sample >> 7) & 0xFF];
 	mantissa = (sample >> (exponent + 3)) & 0x0F;
-	compandedValue = ~(sign | (exponent << 4) | mantissa);
+	compandedValue = (DIO_s8)(~(sign | (exponent << 4) | mantissa));
 
-	return (DIO_s8) compandedValue&0xff;
+	return (DIO_s8)(compandedValue & 0xff);
 }
 
 DIO_s16 DIO_ULawToLinear(DIO_s8 uLawByte)

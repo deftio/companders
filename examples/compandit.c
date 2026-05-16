@@ -38,7 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string.h>
 
 
-#include "companders.h"
+#include "../src/companders.h"
 
 
 //===============================================

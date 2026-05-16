@@ -1,0 +1,12 @@
+version: "1.0.7"
+description: "Fixed-point A-Law and Mu-Law companding library with IIR DC offset correction for embedded systems"
+url: "https://github.com/deftio/companders"
+repository: "https://github.com/deftio/companders.git"
+license: "BSD-2-Clause"
+targets:
+  - esp32
+  - esp32s2
+  - esp32s3
+  - esp32c3
+  - esp32c6
+  - esp32h2

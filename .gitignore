@@ -31,10 +31,29 @@
 *.out
 *.app
 
+# Coverage artifacts
 *.gcov
 *.gcda
 *.gcno
+*.info
 
-compandit
-companders_fulltest
+# Build output directory
+bin/
+
+# Aider artifacts
 .aider*
+
+# Test output
+testout.txt
+
+# PlatformIO build artifacts
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# ESP-IDF build artifacts
+build/
+sdkconfig
+sdkconfig.old
+managed_components/
+dependencies.lock

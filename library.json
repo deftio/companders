@@ -1,0 +1,37 @@
+{
+    "name": "companders",
+    "version": "1.0.7",
+    "description": "Fixed-point A-Law and Mu-Law companding library with IIR DC offset correction for embedded systems",
+    "keywords": "companding, a-law, mu-law, audio, compression, fixed-point, embedded, dsp",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/deftio/companders.git"
+    },
+    "authors": [
+        {
+            "name": "M. A. Chatterjee",
+            "email": "deftio@deftio.com",
+            "maintainer": true
+        }
+    ],
+    "license": "BSD-2-Clause",
+    "homepage": "https://deftio.github.io/companders/",
+    "frameworks": ["arduino", "espidf"],
+    "platforms": "*",
+    "build": {
+        "srcDir": "src",
+        "includeDir": "src"
+    },
+    "examples": [
+        {
+            "name": "Arduino Compander",
+            "base": "examples/arduino_compander",
+            "files": ["arduino_compander.ino"]
+        },
+        {
+            "name": "PlatformIO Compander",
+            "base": "examples/platformio_compander",
+            "files": ["src/main.cpp"]
+        }
+    ]
+}

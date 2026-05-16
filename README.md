@@ -1,38 +1,41 @@
+[![Version](https://img.shields.io/badge/version-1.0.7-green.svg)](https://github.com/deftio/companders)
+[![CI](https://github.com/deftio/companders/actions/workflows/ci.yml/badge.svg)](https://github.com/deftio/companders/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/deftio/companders/badge.svg?branch=master)](https://coveralls.io/github/deftio/companders?branch=master)
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-blue.svg)](https://opensource.org/licenses/BSD-2-Clause)
-[![Github Actions Ci](https://github.com/deftio/companders/actions/workflows/ci.yml/badge.svg)](https://github.com/deftio/companders/actions/workflows/ci.yml/badge.svg)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue.svg?logo=github)](https://github.com/deftio/companders)
 
 # [Companders (a fixed point audio compression library)](https://deftio.github.io/companders/)  
 
-(c) 2001-2024  M. A. Chatterjee
+(c) 2001-2026  M. A. Chatterjee
 
-This repo is a simple audio compression library for microcontrollers using A-Law and Mu-Law (a type of compander).  The code uses fixed-radix (integer only) math with a small introductory discussion and use of associated DC-offset correction with an IIR fixed-radix filter.
+This repo is a simple audio compression library for microcontrollers using A-Law and Mu-Law (a type of compander).  The code uses fixed-radix (integer only) math and includes DC-offset correction with an IIR fixed-radix filter.
 
-All the code in this repo is suitable for small microcontrollers such as 8 bit and 16 bit families (arduino, 68hc, 8051 ) as well as on 32 bit familes such as ARM, RISC-V, etc.
+All the code in this repo is suitable for small microcontrollers such as 8-bit and 16-bit families (Arduino, 68HC, 8051) as well as 32-bit families such as ARM, RISC-V, etc.
 
-As this is a fixed point library (a type of integer math), floating point is not used or even emulated.  For more background on using fixed point (or fixed radix) math see this code library and documentation : [FR_Math](https://github.com/deftio/fr_math)
+As this is a fixed-point library (a type of integer math), floating point is not used or even emulated.  For more background on using fixed-point (or fixed-radix) math see this code library and documentation: [FR_Math](https://github.com/deftio/fr_math)
 
 ## Welcome
 
-The accompanying companders.c contains a small set of functions written in C using only integer math for companding operations.  I developed this several years ago for use in several embedded interized math projects and this small, slightly cleaned up version is made available for the public here.  It worked very well on M*CORE, 80x86 and ARM processors for small embedded systems.
+The accompanying companders.c contains a small set of functions written in C using only integer math for companding operations.  I developed this years ago for use in embedded integer math projects and this cleaned up version is made available for the public here.  It worked very well on M*CORE, 80x86 and ARM processors for small embedded systems.
 
 Usage:
 
 ```C
-#include "companders.h"   //no other dependancies or libaries are required.
+#include "companders.h"   // no other dependencies or libraries are required
 
 // .. in code then
-int myCompandedValue = DIO_LinearToALaw(123); // convert the integer to is A-Law equivalent companded value
+int myCompandedValue = DIO_LinearToALaw(123); // convert the integer to its A-Law equivalent companded value
 
 int unCompandedValue = DIO_ALawToLinear(myCompandedValue); // convert back to linear range. (with appropriate loss)
 ```
 
 ## About Companding
 
-Companding is a special type of lossy compression in which linear format samples are converted to logarithmic representation in order to preserve dynamic range of the original linear sample at the expense of uniform precision.  Companding is an old method and is free of patents (all have expired).
+Companding is a special type of lossy compression in which linear format samples are converted to logarithmic representation to preserve the dynamic range of the original linear sample at the expense of uniform precision.  Companding is an old method and is free of patents (all have expired).
 
 Theory of how companding works:
-Suppose that we have a signed 16 bit linear sample in 2's complement math.  The range of this sample can vary from -32768 to + 32767 in integer steps.  Now lets put the constraint that we only have 8 bits with which to represent the data not the full 16 bits of the original linear number.  A simple way to preserve high order information would be to linearly truncate off the lower 8 bits giving us a signed number from -128 to +127.  We could make a mental note to keep track of the fact that we lost the lower 8 bits and so when use this representation we multiply by 8 bits (or 256) to preserve the input range.
-so:
+Suppose that we have a signed 16-bit linear sample in 2's complement math.  The range of this sample can vary from -32768 to +32767 in integer steps.  Now let's put the constraint that we only have 8 bits with which to represent the data, not the full 16 bits of the original linear number.  A simple way to preserve high order information would be to linearly truncate off the lower 8 bits giving us a signed number from -128 to +127.  We could make a mental note to keep track of the fact that we lost the lower 8 bits and so when we use this representation we multiply by 2^8 (256) to preserve the input range.
+So:
 
 ```C
 -128 * 256 = -32768
@@ -47,14 +50,14 @@ so:
  127 * 256 =  32512 
  ```
 
-Notice that the steps between these linearly rounded off samples are quite large.  This truncated 8 bit representation would be very good at representing a linear quantity system such as linear displacement transducer which moves through its whole range as part of normal operation (like a door). but terrible at logarithmic phenomonen such as audio.  Audio information tends to be grouped around zero with occaisonaly peaks of loudness.  So with linear quantization soft audio would be lost due to the large quanitization steps at low volumes. To address this companders were developed for use in landline telephony for compressing audio data logarithmically instead of linearly.  Hence we use more bits for audio samples near zero and less with audio samples near the integer max extremes.
+Notice that the steps between these linearly rounded off samples are quite large.  This truncated 8-bit representation would be very good at representing a linear quantity system such as a linear displacement transducer which moves through its whole range as part of normal operation (like a door), but terrible at logarithmic phenomena such as audio.  Audio information tends to be grouped around zero with occasional peaks of loudness.  So with linear quantization soft audio would be lost due to the large quantization steps at low volumes.  To address this, companders were developed for use in landline telephony for compressing audio data logarithmically instead of linearly.  Hence we use more bits for audio samples near zero and fewer for audio samples near the integer max extremes.
 
-A-Law and it cousin mu-Law are companders.  Rather than represent samples in linear steps the more bits are allocated to samples near zero while larger magnitude (positive or negative) samples are represented with proportionately larger interval sizes.
+A-Law and its cousin Mu-Law are companders.  Rather than represent samples in linear steps, more bits are allocated to samples near zero while larger magnitude (positive or negative) samples are represented with proportionately larger interval sizes.
 
-Differential encoding (taking the difference of neighboring samples) can greatly help with compressing data to where we "have more bits" as well, provided samples rates are fast enough.  Telephony typically operated with 8 bit non-differential (companded) samples at 8KHz.
+Differential encoding (taking the difference of neighboring samples) can greatly help with compressing data to where we "have more bits" as well, provided sample rates are fast enough.  Telephony typically operated with 8-bit non-differential (companded) samples at 8KHz.
 
-In A-Law the following table (in bits) shows how a 13 bit signed linear integer is companded in to A-Law:
-(source is Sun microsystems, a similar table is on wikipedia or the G.711 specification).
+In A-Law the following table (in bits) shows how a 13-bit signed linear integer is companded into A-Law:
+(source is Sun Microsystems; a similar table is on Wikipedia or the G.711 specification).
 
 |   Linear Input Code | Compressed Code |
 |------------------------ | --------------- |
@@ -69,13 +72,13 @@ In A-Law the following table (in bits) shows how a 13 bit signed linear integer 
 
 ### Mu-law (also mu-law or u-law)
 
-Mu is similar compander to A-Law but  used in American & Japanese telephony instead of European Telephony. 
+Mu-Law is a similar compander to A-Law but used in American and Japanese telephony instead of European telephony.
 
 Both algorithms aim to optimize the dynamic range of an audio signal by using logarithmic compression, but they differ in their compression characteristics and implementation. A-Law provides a slightly lower compression ratio, which offers better signal quality for signals with lower amplitude, whereas μ-Law provides higher compression, which can handle a wider range of input levels more efficiently but introduces more distortion for low-level signals. These standards were developed in the mid-20th century to improve the efficiency and quality of voice transmission over limited-bandwidth communication channels. A-Law was standardized by the International Telegraph and Telephone Consultative Committee (CCITT) and is detailed in the ITU-T G.711 recommendation, while μ-Law was standardized by the American National Standards Institute (ANSI).
 
 ## About this library
 
-This free library supports A-Law, mu-Law and IIR averages.  A-Law or Mu-Law are used for the companding while the IIR averagers can be used for for embedded ADCs where the zero point is set loosely.  Since the companders are sensitive, and allocate more bits, to values near zero its important to define a good zero.  For example a microcontroller has a pin with an ADC which is fed digitized audio signal.  The smallest value for the microtroncoller is 0V = 0x00 and the 3.3V = 0x3ff for 10 effective bits of resolution.  A resisitive analog divider is used to center the ADC near the half-input range or about 1.6V while the audio is capacitively coupled as shown here:  
+This free library supports A-Law, Mu-Law and IIR averages.  A-Law or Mu-Law are used for the companding while the IIR averagers can be used for embedded ADCs where the zero point is set loosely.  Since the companders are sensitive, and allocate more bits, to values near zero it's important to define a good zero.  For example, a microcontroller has a pin with an ADC which is fed a digitized audio signal.  The smallest value for the microcontroller is 0V = 0x00 and the 3.3V = 0x3ff for 10 effective bits of resolution.  A resistive analog divider is used to center the ADC near the half-input range or about 1.6V while the audio is capacitively coupled as shown here:
 
  ```text
  
@@ -91,13 +94,13 @@ uC_ADC_Pin<-----------C---- audio_input_source
 
  ```
 
- However cheap resistors have tolerances 5 to 10%, so the setpoint voltage could easily be anywhere from 1.4 to 1.8V.  To address this software should read the ADC before audio is coming in and determine the actual DC bias voltage set by the real world resistors.  Then when audio is coming in this value is subtracted from the ADC input to give a signed number which is fed to the LinearToAlaw encoder.  
+ However, cheap resistors have tolerances of 5 to 10%, so the setpoint voltage could easily be anywhere from 1.4 to 1.8V.  To address this, software should read the ADC before audio is coming in and determine the actual DC bias voltage set by the real-world resistors.  Then when audio is coming in, this value is subtracted from the ADC input to give a signed number which is fed to the LinearToALaw encoder.
 
- If it not easily possible to turn off the analog / audio source then the long term DC average can be inferred by using one of the IIR functions included here with a long window length (perhaps 2000 samples if sampling at 8 KHz or about 1/4 second).  These IIR functions are cheap to run in realtime even with reasonably high sample rates as they take little memory and are simple integer-math IIRs.
+ If it is not easily possible to turn off the analog/audio source then the long-term DC average can be inferred by using one of the IIR functions included here with a long window length (perhaps 2000 samples if sampling at 8 KHz, or about 1/4 second).  These IIR functions are cheap to run in realtime even with reasonably high sample rates as they take little memory and are simple integer-math IIRs.
 
 ## About the Fixed Radix (FR) Math IIR averages
 
-The (Infinite Impulse Reponse) IIR functions included here use fixed radix math to represent fractional parts of an integer.  By providing a settable radix (amount of bits devoted to fractional resolution), the programmer can make tradeoffs between resolution and dynamic range.  The larger the radix specified the more bits that will be used in the fractional portion of the representation, which for smaller window sizes may not by necessary.  There are more comprehensive ways to deal with fractional representation in binary systems (floating point, bigNum / arbitrary length registers, separation of numerator/denomators etc) but these incur much larger compute/code/memory overhead.  The simple system used here avoids the need for testing for overflow/underflow which allows for low foot print code/cpu/memory bandwidth.
+The (Infinite Impulse Response) IIR functions included here use fixed-radix math to represent fractional parts of an integer.  By providing a settable radix (number of bits devoted to fractional resolution), the programmer can make tradeoffs between resolution and dynamic range.  The larger the radix specified, the more bits that will be used in the fractional portion of the representation, which for smaller window sizes may not be necessary.  There are more comprehensive ways to deal with fractional representation in binary systems (floating point, bigNum/arbitrary length registers, separation of numerator/denominators, etc.) but these incur much larger compute/code/memory overhead.  The simple system used here avoids the need for testing for overflow/underflow which allows for low-footprint code/cpu/memory bandwidth.
 
 To calculate how many bits of fractional part while preventing overflow use the following formulas:
 
@@ -106,7 +109,7 @@ Nb = number_of_bits_in_use = ceiling(log2(highest_number_represented))
 
 radix = 32-Nb(sample_resolution)-Nb(WindowLength)-2
 
-//for example if you have a ADC generating counts from 0 to 1023 then the Nb(ADC-range) = 
+//for example if you have an ADC generating counts from 0 to 1023 then the Nb(ADC-range) =
   Nb = ceiling(log2(1023)) = 10 // bits
   
 //If you use a DC average window length of 2000 
@@ -117,25 +120,25 @@ radix = 32-Nb(sample_resolution)-Nb(WindowLength)-2
 
 ```  
 
-with 9 bits in the radix fractional precision of 512 units per integer (e.g 1/512) is possible.  The "2" in for formula comes from reserving bits for the sign bit and the additional operation in averager.
+With 9 bits in the radix, fractional precision of 512 units per integer (e.g. 1/512) is possible.  The "2" in the formula comes from reserving bits for the sign bit and the additional operation in the averager.
 
-The function DIO_s32 DIO_IIRavgFR() allows any integer length window size to be used, while the function DIO_IIRavgPower2FR() specifies window lengths in powers of two but all calculations are based on shift operations which can be significantly faster on lower end microprocessors.
+The function DIO_IIRavgFR() allows any integer length window size to be used, while the function DIO_IIRavgPower2FR() specifies window lengths in powers of two, but all calculations are based on shift operations which can be significantly faster on lower-end microprocessors.
 
 ## Embedded Systems
 
-Now back to an embedded microcontroller example.  Let's say it has an ADC which maps the voltage on 1 pin from 0-3.3V in to 0-4095 counts (12 bits).  We capacitively couple the input voltage and use the bias resistors to set mid point in the center of the range.  Lets say the the our resistors set the bias at 1.55V.  This equals our "zero point".  Below this point is negative from the incoming capacitively coupled audio and above this is positive.  
+Now back to an embedded microcontroller example.  Let's say it has an ADC which maps the voltage on one pin from 0-3.3V into 0-4095 counts (12 bits).  We capacitively couple the input voltage and use the bias resistors to set the midpoint in the center of the range.  Let's say our resistors set the bias at 1.55V.  This equals our "zero point".  Below this point is negative from the incoming capacitively coupled audio and above this is positive.
 
-Our "guess" as to the bias = both resistors are the same = (3.3V/2) =1.65V = (1.65V)/(4095 counts/3.3V)= 2048 counts
+Our "guess" as to the bias = both resistors are the same = (3.3V/2) = 1.65V = 1.65V * (4095 counts/3.3V) = 2048 counts
 
-Resistor actual set bias "zero point" = 1.55V = (1.55V) *(4095 counts/3.3V)) = 1923 counts
-We want this to be "zero" we use for the companded A/D process.  
+Resistor actual set bias "zero point" = 1.55V = 1.55V * (4095 counts/3.3V) = 1923 counts
+We want this to be the "zero" we use for the companded A/D process.
 
-To do this we start our ADC to periodically sample for sometime before we start "recording" audio.   We will feed the ADC values in to our IIR average to find the actual zero point. Note that even when we decide not to "record" we still can still run the A/D and  IIR averager so its adapting to the real zero point.
+To do this we start our ADC to periodically sample for some time before we start "recording" audio.  We will feed the ADC values into our IIR average to find the actual zero point.  Note that even when we decide not to "record" we can still run the A/D and IIR averager so it's adapting to the real zero point.
 
 ## C-like Pseudo code
 
 ```C
-#include "companders.h"
+#include "companders.h"  // add src/ to your include path, or use the path directly
 
 static volatile int32 gIIRavg= 2048; // global static var holds DC average as estimated by the IIR
 static volatile int   gDoSomethingWithCompandedValue=0;
@@ -148,7 +151,7 @@ void processAudioSample() //interrupt handler -- runs at the sample rate
  //read the raw uncorrected sample (has some DC offset bias) 
  adcValue= inputPin.read_u16(); // read a 16 bit unsigned sample
  
- // this updates the IIR average everytime the adc returns a sample
+ // this updates the IIR average every time the ADC returns a sample
  gIIRavg = DIO_IIRavgPower2FR(gIIRavg,11,adcValue,8);
  
  //now compute companded value with DC offset correction
@@ -164,53 +167,70 @@ main()
  gDoSomethingWithCompandedValue=0;
  inputPin.attachInterrupt(&processAudioSample,8000); //attach interrupt handler, 8000 Hz sample rate
  
- // ... somepoint later in the code
+ // ... some point later in the code
  
- inputPin.start(); // start the collecting audio.  inside the interrupt handler we'll start estimating the DC bias
+ inputPin.start(); // start collecting audio.  Inside the interrupt handler we'll start estimating the DC bias
  
  // ... some time later  (when we actually want the audio) we set this flag
  gDoSomethingWithCompandedValue=1; //now the interrupt routine will call the doSomethingWithALaw() function
  
  // ... some time later
- gDoSomethingWithCompandedValue=0; //we're no longer collecting ALaw companded date, but we're 
+ gDoSomethingWithCompandedValue=0; //we're no longer collecting A-Law companded data, but we're
            // still running the IIR averager
  
 }
 
 ```
 
-The accompanying compandit.c file is an example program demonstrating the convergence of the averager to a simulated DC offset value (output is in the testout.txt file).
+The accompanying `examples/compandit.c` file is an example program demonstrating the convergence of the averager to a simulated DC offset value.
 
 ### Some Closing Comments  
 
-Finally,  it can be in some systems that we can't turn off the audio input source it may be hard wired to some sensor or mic or perhaps the A/D center bias circuit (the 2 resistors) always is on when the audio is on.  In this case running the IIR with a long filter length all the time can remove the bias even when the audio is running.  For example in an 8KHz sampling system with an IIR length of 1024 is about 1/8 of a second or a cutoff freq well below 10Hz and costs almost nothing to run.
+Finally, in some systems we can't turn off the audio input source — it may be hardwired to some sensor or mic, or perhaps the A/D center bias circuit (the 2 resistors) is always on when the audio is on.  In this case running the IIR with a long filter length all the time can remove the bias even when the audio is running.  For example, in an 8KHz sampling system an IIR length of 1024 is about 1/8 of a second or a cutoff freq well below 10Hz and costs almost nothing to run.
 
 ### Further Reading
 
-* [TI App Note on Alaw and Mulaw](https://www.ti.com/lit/an/spra163a/spra163a.pdf)
-* [wikipedia on Companding](https://en.wikipedia.org/wiki/Companding)
-* [University of British Columbia lab on Companding](https://people.ece.ubc.ca/edc/4550.jan2018/lab2.pdf)
+* [TI App Note on A-Law and Mu-Law](https://www.ti.com/lit/an/spra163a/spra163a.pdf)
+* [Wikipedia on Companding](https://en.wikipedia.org/wiki/Companding)
+* [University of British Columbia Lab on Companding](https://people.ece.ubc.ca/edc/4550.jan2018/lab2.pdf)
 
 ### Code Coverage
 
-Code coverage is achieved using gcov from the gcc test suite. To see the code coverage:
+Code coverage is achieved using gcov/lcov from the gcc test suite.  To see the code coverage:
 
 ```bash
 make clean
-make
-./test-library.out
-gcov companders.c
+make coverage
 ```
 
-The line gcov companders.c generates the file companders.c.gcov, which can be viewed in any text editor. Lines marked with #### have never been run.
+This builds with coverage flags, runs the tests, and generates an lcov summary.  The coverage report is also saved to `bin/coverage.info`.
+
+### Project Structure
+
+```
+companders/
+  src/                 - Library source (companders.h, companders.c)
+  test/                - Test suite
+  examples/
+    arduino_compander/ - Arduino IDE example (.ino)
+    platformio_compander/ - PlatformIO example (Arduino framework)
+    espidf_compander/  - ESP-IDF native example
+    compandit.c        - POSIX demo (built via makefile)
+  .github/             - CI workflows
+  library.json         - PlatformIO library manifest
+  library.properties   - Arduino Library Manager manifest
+  idf_component.yml    - ESP-IDF component manifest
+  CMakeLists.txt       - ESP-IDF component build file
+```
 
 
 ## Versions
 
-* 1.0.6 08 Aug 2024  -- added ci testing 
+* 1.0.7 09 May 2026  -- reorganized build tree (src/, test/, examples/), added Arduino example, updated CI, no api/code changes.
+* 1.0.6 08 Aug 2024  -- added ci testing
 * 1.0.5 30 May 2024  -- cleaned up release 
 * 1.0.4 30 May 2024  -- add ulaw, updated docs, added full test 
-* 1.0.4 23 Jan 2023  -- updated docs  
+* 1.0.3 23 Jan 2023  -- updated docs only (no api change)
 * 1.0.3 28 Jul 2019  -- updated docs, ver example 
 * 1.0.2 15 Jul 2016  -- updated README.md to markdown format.  updated license to be OSI compliant.  no code changes. some minor doc updates. Thanks to John R Strohm giving me the nudge to update the docs here. 
 * 1.0.1  3 Sep 2012  -- original release in github   
@@ -219,7 +239,7 @@ The line gcov companders.c generates the file companders.c.gcov, which can be vi
 
 See attached LICENSE.txt file  (OSI approved BSD 2 Clause)
 
-Copyright (c) 2001-2024, M. A. Chatterjee < deftio at deftio dot com >
+Copyright (c) 2001-2026, M. A. Chatterjee < deftio at deftio dot com >
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

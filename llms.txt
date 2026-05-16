@@ -1,0 +1,115 @@
+# Companders - Fixed-Point Audio Companding Library
+
+> companders is a C library providing A-Law and Mu-Law audio companding
+> (compression/expansion) using only integer math. It includes IIR DC offset
+> correction filters. Designed for embedded systems from 8-bit to 32-bit.
+
+## Project overview
+
+- Name: companders
+- Version: 1.0.7
+- License: BSD 2-Clause
+- Language: C (C99 compatible, C89 with DIO_NO_STDINT)
+- Repository: https://github.com/deftio/companders
+- Author: M. A. Chatterjee
+
+## What this library does
+
+Companding converts 16-bit linear PCM audio samples to 8-bit logarithmic
+representation (and back), preserving dynamic range. This is the same
+technique used in G.711 telephony. The library also provides fixed-radix
+IIR averagers for estimating and removing DC bias from ADC readings.
+
+No floating point math is used anywhere. All operations use integer
+arithmetic with optional bit-shift-only variants for CPUs without fast
+divide instructions.
+
+## API (6 functions)
+
+```c
+#include <companders.h>
+
+// A-Law (ITU-T G.711, European standard)
+DIO_s8  DIO_LinearToALaw(DIO_s16 sample);     // 16-bit linear -> 8-bit A-Law
+DIO_s16 DIO_ALawToLinear(DIO_s8 aLawByte);    // 8-bit A-Law -> 16-bit linear
+
+// Mu-Law (ANSI, American/Japanese standard)
+DIO_s8  DIO_LinearToULaw(DIO_s16 sample);     // 16-bit linear -> 8-bit Mu-Law
+DIO_s16 DIO_ULawToLinear(DIO_s8 uLawByte);    // 8-bit Mu-Law -> 16-bit linear
+
+// IIR DC offset correction (fixed-radix math)
+DIO_s32 DIO_IIRavgFR(DIO_s32 prevAvg, DIO_u16 windowLen, DIO_s16 newSample, DIO_u8 radix);
+DIO_s32 DIO_IIRavgPower2FR(DIO_s32 prevAvg, DIO_u8 windowLenInBits, DIO_s16 newSample, DIO_u8 radix);
+```
+
+## Utility macros
+
+```c
+DIO_I2FR(x, r)   // Integer to fixed-radix: (x) << (r)
+DIO_FR2I(x, r)   // Fixed-radix to integer: (x) >> (r)
+DIO_FR2D(x, r)   // Fixed-radix to double (debug/test only)
+```
+
+## Version macros
+
+```c
+DIO_COMPANDERS_VER_MAJOR   // 1
+DIO_COMPANDERS_VER_MINOR   // 0
+DIO_COMPANDERS_VER_PATCH   // 7
+DIO_COMPANDERS_VER_HEX     // 0x00010007 (32-bit 0x00MMmmpp)
+DIO_COMPANDERS_VER_STRING  // "1.0.7"
+```
+
+## Type system
+
+Uses stdint.h by default (uint8_t, int8_t, uint16_t, int16_t, uint32_t, int32_t).
+Define DIO_NO_STDINT before including the header to fall back to char/short/long
+typedefs for compilers that lack stdint.h.
+
+## Directory structure
+
+```
+src/companders.h              - Public header (include this)
+src/companders.c              - Implementation
+test/companders_fulltest.c    - Test suite (100% line and function coverage)
+examples/
+  arduino_compander/          - Arduino IDE example (.ino)
+  platformio_compander/       - PlatformIO example (Arduino framework)
+  espidf_compander/           - ESP-IDF native example
+  compandit.c                 - POSIX command-line demo
+```
+
+## Platform support
+
+### POSIX / Desktop (gcc, clang)
+Build: `make test` (runs tests), `make build` (builds example), `make coverage`
+
+### Arduino IDE
+Install via Library Manager or clone into ~/Arduino/libraries/.
+Use: `#include <companders.h>`
+Manifest: library.properties
+
+### PlatformIO
+Add to platformio.ini: `lib_deps = https://github.com/deftio/companders.git`
+Use: `#include <companders.h>`
+Manifest: library.json
+
+### ESP-IDF (Espressif)
+Add as component in components/ directory or via idf_component.yml dependency.
+Use: `#include "companders.h"`
+Manifests: idf_component.yml, CMakeLists.txt
+Targets: ESP32, ESP32-S2, ESP32-S3, ESP32-C3, ESP32-C6, ESP32-H2
+
+## Dependencies
+
+None. The library is entirely self-contained. Only the POSIX test/example
+builds link -lm (for the compandit.c demo which uses DIO_FR2D for printing).
+
+## Key design decisions
+
+- No heap allocation
+- No floating point
+- No external dependencies
+- All lookup tables are const/static (ROM-friendly)
+- C++ compatible (extern "C" guards)
+- DIO_IIRavgPower2FR uses only shifts (no divide) for low-end CPUs
